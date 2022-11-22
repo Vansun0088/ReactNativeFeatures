@@ -7,6 +7,7 @@ import AddNewPlace from "./screens/AddNewPlace";
 import IconButton from "./components/UI/IconButton";
 import PlaceDetails from "./screens/PlaceDetails";
 import GlobalStyles from "./constants/GlobalStyles";
+import Map from "./screens/Map";
 
 const Stack = createNativeStackNavigator();
 
@@ -49,6 +50,13 @@ export default function App() {
           <Stack.Screen
             name="PlaceDetails"
             component={PlaceDetails}
+            options={{
+              headerBackTitle: "Back",
+            }}
+          />
+          <Stack.Screen
+            name="Map"
+            component={Map}
             options={{
               headerBackTitle: "Back",
             }}
