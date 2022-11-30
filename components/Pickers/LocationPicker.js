@@ -7,18 +7,28 @@ import HollowButton from "../UI/HollowButton";
 import GlobalStyles from "../../constants/GlobalStyles";
 import { getMapPreview } from "../../util/location";
 
-export default function LocationPicker({ currentLocation }) {
+export default function LocationPicker({ currentLocation, onPickLocation }) {
   const [locationUri, setLocationUri] = useState();
   const [foregroundPermissionInformation, requestPermission] = useForegroundPermissions();
   const isFocused = useIsFocused();
 
   useEffect(() => {
     if (currentLocation && isFocused) {
-      setLocationUri(currentLocation);
+      const mapPickedLocation = {
+        lat: currentLocation.lat,
+        lng: currentLocation.lng,
+      };
+      setLocationUri(mapPickedLocation);
     }
   }, [currentLocation, isFocused]);
 
   const navigation = useNavigation();
+
+  useEffect(() => {
+    if (locationUri) {
+      onPickLocation(locationUri);
+    }
+  }, [locationUri, onPickLocation]);
 
   async function verifyPermissions() {
     if (foregroundPermissionInformation.status === PermissionStatus.UNDETERMINED) {

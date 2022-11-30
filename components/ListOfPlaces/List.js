@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { FlatList, StyleSheet, Text, Pressable } from "react-native";
 import GlobalStyles from "../../constants/GlobalStyles";
 import { useNavigation } from "@react-navigation/native";
@@ -6,21 +5,13 @@ import { useNavigation } from "@react-navigation/native";
 import ListItem from "./ListItem";
 
 export default function List({ data }) {
-  const [places, setPlaces] = useState([
-    {
-      title: "MyTV",
-      location: "USA California",
-      imageUri:
-        "https://www.tourmyindia.com/blog//wp-content/uploads/2020/11/Taj-Mahal-Agra-feature.jpg",
-    },
-  ]);
   const navigation = useNavigation();
 
   function addingTextHandler() {
     navigation.navigate("AddNewPlace");
   }
 
-  if (!places || places.length === 0) {
+  if (!data.length || data.length === 0) {
     return (
       <Pressable
         onPress={addingTextHandler}
@@ -34,7 +25,7 @@ export default function List({ data }) {
   return (
     <FlatList
       style={styles.list}
-      data={places}
+      data={data}
       keyExtractor={(item) => item.id}
       renderItem={({ item }) => <ListItem place={item} />}
     />

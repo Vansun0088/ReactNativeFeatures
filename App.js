@@ -1,6 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useEffect, useState } from "react";
+import AppLoading from "expo-app-loading";
 
 import FavoritePlaces from "./screens/FavoritePlaces";
 import AddNewPlace from "./screens/AddNewPlace";
@@ -8,10 +10,28 @@ import IconButton from "./components/UI/IconButton";
 import PlaceDetails from "./screens/PlaceDetails";
 import GlobalStyles from "./constants/GlobalStyles";
 import Map from "./screens/Map";
+import { init } from "./util/database";
+import Photo from "./screens/Photo";
 
 const Stack = createNativeStackNavigator();
 
 export default function App() {
+  const [dbInitialized, setDbInitialized] = useState(false);
+
+  useEffect(() => {
+    init()
+      .then(() => {
+        setDbInitialized(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  if (!dbInitialized) {
+    return <AppLoading />;
+  }
+
   return (
     <>
       <StatusBar style="dark" />
@@ -59,6 +79,16 @@ export default function App() {
             component={Map}
             options={{
               headerBackTitle: "Back",
+            }}
+          />
+          <Stack.Screen
+            name="Photo"
+            component={Photo}
+            options={{
+              contentStyle: { backgroundColor: "black" },
+              headerStyle: { backgroundColor: "black" },
+              headerTintColor: "#e5e51d",
+              headerTitleStyle: { fontWeight: 0 },
             }}
           />
         </Stack.Navigator>

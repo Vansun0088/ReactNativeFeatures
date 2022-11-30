@@ -1,15 +1,14 @@
-import { Alert, View, Text, StyleSheet, Image, Pressable } from "react-native";
+import { Alert, View, Text, StyleSheet, Image, Platform } from "react-native";
 import { launchCameraAsync, useCameraPermissions, PermissionStatus } from "expo-image-picker";
 import { useState } from "react";
-import { useNavigation } from "@react-navigation/native";
 
 import GlobalStyles from "../../constants/GlobalStyles";
 import HollowButton from "../UI/HollowButton";
 
-export default function ImagePicker() {
-  const navigation = useNavigation();
+export default function ImagePicker({ onTakeImage }) {
   const [imageUri, setImageUri] = useState();
   const [cameraPermissionInformation, requestPermission] = useCameraPermissions();
+  const isIphone = true ? Platform.OS === "ios" : false;
 
   async function verifyPermissions() {
     if (cameraPermissionInformation.status === PermissionStatus.UNDETERMINED) {
@@ -37,10 +36,12 @@ export default function ImagePicker() {
     }
 
     const image = await launchCameraAsync({
-      allowsEditing: true,
+      allowsEditing: isIphone ? false : true,
       quality: 0.5,
     });
+    console.log(image);
     setImageUri(image.assets[0].uri);
+    onTakeImage(image.assets[0].uri);
   }
 
   return (

@@ -3,14 +3,13 @@ import { useNavigation } from "@react-navigation/native";
 
 import GlobalStyles from "../../constants/GlobalStyles";
 
-export default function ListItem({ place }) {
+export default function ListItem({ place, setPlaces }) {
   const navigation = useNavigation();
 
   function buttonHandler() {
     navigation.navigate("PlaceDetails", {
       title: place.title,
-      location: place.location,
-      imageUri: place.imageUri,
+      placeId: place.id,
     });
   }
 
@@ -19,12 +18,10 @@ export default function ListItem({ place }) {
       style={({ pressed }) => [styles.container, pressed && styles.pressed]}
       onPress={buttonHandler}
     >
-      <View style={styles.pictureContainer}>
-        <Image style={styles.image} source={{ uri: place.imageUri }} />
-      </View>
+      <Image style={styles.image} source={{ uri: place.imageUri }} />
       <View style={styles.descriptionContainer}>
         <Text style={styles.title}>{place.title}</Text>
-        <Text>{place.location}</Text>
+        <Text>{place.address}</Text>
       </View>
     </Pressable>
   );
@@ -32,30 +29,30 @@ export default function ListItem({ place }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     backgroundColor: GlobalStyles.Colors.globalBlue,
+    marginVertical: 10,
     borderRadius: 15,
     minHeight: 120,
     flexDirection: "row",
-    overflow: "hidden",
+    alignItems: "flex-start",
+    elevation: 2,
+    shadowColor: "black",
+    shadowOpacity: 0.15,
+    shadowOffset: { width: 1, height: 1 },
+    shadowRadius: 2,
   },
   pressed: {
     opacity: 0.45,
   },
-  pictureContainer: {
-    flex: 1,
-    width: "33%",
-    backgroundColor: "white",
-    justifyContent: "center",
-    alignItems: "center",
-  },
   image: {
+    flex: 1,
     width: "100%",
     height: "100%",
+    borderTopLeftRadius: 15,
+    borderBottomLeftRadius: 15,
   },
   descriptionContainer: {
     flex: 2,
-    width: "66%",
     paddingVertical: 15,
     paddingHorizontal: 10,
   },

@@ -9,6 +9,8 @@ export default function Map({ route, navigation }) {
     lng: route.params?.lng,
   };
 
+  const isWatch = route.params?.watch;
+
   const region = {
     latitude: currentLocation ? currentLocation.lat : 54,
     longitude: currentLocation ? currentLocation.lng : 25,
@@ -19,7 +21,7 @@ export default function Map({ route, navigation }) {
   function selectLocationHandler(event) {
     const lat = event.nativeEvent.coordinate.latitude;
     const lng = event.nativeEvent.coordinate.longitude;
-    setSelectedLocation({ lat: lat, lng: lng });
+    !isWatch && setSelectedLocation({ lat: lat, lng: lng });
   }
 
   const chooseHandler = useCallback(() => {
@@ -32,15 +34,18 @@ export default function Map({ route, navigation }) {
     });
   }, [navigation, selectedLocation]);
 
-  useLayoutEffect(() => {
-    navigation.setOptions({
-      headerRight: ({ tintColor }) => (
-        <Pressable onPress={chooseHandler}>
-          <Text style={styles.chooseText}>Choose</Text>
-        </Pressable>
-      ),
-    });
-  }, [navigation, chooseHandler]);
+  {
+    !isWatch &&
+      useLayoutEffect(() => {
+        navigation.setOptions({
+          headerRight: ({ tintColor }) => (
+            <Pressable onPress={chooseHandler}>
+              <Text style={[styles.chooseText, { color: tintColor }]}>Choose</Text>
+            </Pressable>
+          ),
+        });
+      }, [navigation, chooseHandler]);
+  }
 
   useEffect(() => {
     if (currentLocation.lat && currentLocation.lng) {
@@ -67,5 +72,6 @@ const styles = StyleSheet.create({
   chooseText: {
     fontWeight: "bold",
     padding: 10,
+    paddingRight: 0,
   },
 });
